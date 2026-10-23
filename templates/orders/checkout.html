@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | Book Management{% endblock %}
+{% block content %}
+<h1 class="h2 mb-3">Checkout</h1>
+{% if items %}
+  <ul class="list-group mb-3">
+    {% for item in items %}
+      <li class="list-group-item d-flex justify-content-between">
+        <span>{{ item.book.title }} × {{ item.quantity }}</span>
+        <span>${{ item.subtotal }}</span>
+      </li>
+    {% endfor %}
+    <li class="list-group-item d-flex justify-content-between fw-bold">
+      <span>Total</span><span>${{ cart.total }}</span>
+    </li>
+  </ul>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-success" type="submit">Place order</button>
+    <a class="btn btn-outline-secondary" href="{% url 'cart:detail' %}">Return to cart</a>
+  </form>
+{% else %}
+  <p>Your cart is empty. <a href="{% url 'books:list' %}">Browse books</a>.</p>
+{% endif %}
+{% endblock %}

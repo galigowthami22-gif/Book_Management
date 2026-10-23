@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} | Book Management{% endblock %}
+{% block content %}
+<div class="row g-4">
+  {% if book.cover_image %}
+    <div class="col-md-4"><img src="{{ book.cover_image.url }}" class="img-fluid rounded bg-white" alt="Cover of {{ book.title }}"></div>
+  {% endif %}
+  <div class="col">
+    <p class="text-muted mb-1">{{ book.category.name }}</p>
+    <h1>{{ book.title }}</h1>
+    <p class="lead">by {{ book.author }}</p>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <p><strong>Price:</strong> ${{ book.price }}</p>
+    <p><strong>Stock:</strong> {{ book.stock }}</p>
+    <p>{{ book.description|linebreaks }}</p>
+    {% if user.is_authenticated and book.stock > 0 %}
+      <form method="post" action="{% url 'cart:add' book.pk %}" class="d-flex gap-2 mb-3">
+        {% csrf_token %}
+        <label class="visually-hidden" for="quantity">Quantity</label>
+        <input id="quantity" class="form-control" style="max-width: 8rem;" type="number" name="quantity" value="1" min="1" max="{{ book.stock }}">
+        <button class="btn btn-success" type="submit">Add to cart</button>
+      </form>
+    {% elif user.is_authenticated %}
+      <p class="text-danger">Out of stock.</p>
+    {% else %}
+      <p><a href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">Log in</a> to add this book to your cart.</p>
+    {% endif %}
+    {% if user.is_staff %}
+      <a class="btn btn-primary" href="{% url 'books:update' book.pk %}">Edit</a>
+      <a class="btn btn-outline-danger" href="{% url 'books:delete' book.pk %}">Delete</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

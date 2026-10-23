@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Categories | Book Management{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h2 mb-0">Categories</h1>
+  {% if user.is_staff %}<a class="btn btn-primary" href="{% url 'categories:create' %}">Add category</a>{% endif %}
+</div>
+<div class="list-group">
+  {% for category in categories %}
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <div><strong>{{ category.name }}</strong>{% if category.description %}<p class="mb-0 text-muted">{{ category.description }}</p>{% endif %}</div>
+      {% if user.is_staff %}
+        <div><a class="btn btn-sm btn-outline-primary" href="{% url 'categories:update' category.pk %}">Edit</a> <a class="btn btn-sm btn-outline-danger" href="{% url 'categories:delete' category.pk %}">Delete</a></div>
+      {% endif %}
+    </div>
+  {% empty %}<p>No categories have been added.</p>{% endfor %}
+</div>
+{% endblock %}

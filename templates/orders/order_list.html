@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}My orders | Book Management{% endblock %}
+{% block content %}
+<h1 class="h2 mb-3">My orders</h1>
+{% for order in orders %}
+  <article class="card card-body mb-3">
+    <div class="d-flex justify-content-between"><strong>Order #{{ order.pk }}</strong><span>{{ order.get_status_display }}</span></div>
+    <p class="mb-2">Placed {{ order.created_at|date:"M j, Y" }} · Status: {{ order.get_status_display }} · Total ${{ order.total }}</p>
+    <ul class="mb-0">{% for item in order.items.all %}<li>{{ item.title }} × {{ item.quantity }}</li>{% endfor %}</ul>
+  </article>
+{% empty %}
+  <p>You have not placed any orders.</p>
+{% endfor %}
+{% endblock %}

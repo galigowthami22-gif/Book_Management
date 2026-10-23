@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}My cart | Book Management{% endblock %}
+{% block content %}
+<h1 class="h2 mb-3">My cart</h1>
+{% if items %}
+  <div class="list-group mb-3">
+    {% for item in items %}
+      <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <a href="{{ item.book.get_absolute_url }}">{{ item.book.title }}</a>
+          <div class="small text-muted">${{ item.book.price }} each · {{ item.book.stock }} in stock</div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <form method="post" action="{% url 'cart:update' item.pk %}" class="d-flex gap-2">
+            {% csrf_token %}
+            <label class="visually-hidden" for="quantity-{{ item.pk }}">Quantity</label>
+            <input id="quantity-{{ item.pk }}" class="form-control" type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.book.stock }}" style="width: 6rem;">
+            <button class="btn btn-outline-primary" type="submit">Update</button>
+          </form>
+          <span>${{ item.subtotal }}</span>
+          <form method="post" action="{% url 'cart:remove' item.pk %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger" type="submit">Remove</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="text-end">
+    <p class="h5">Subtotal: ${{ cart.subtotal }}</p>
+    <p>Total: ${{ cart.total }}</p>
+    <a class="btn btn-success" href="{% url 'orders:checkout' %}">Proceed to checkout</a>
+  </div>
+{% else %}
+  <p>Your cart is empty. <a href="{% url 'books:list' %}">Browse books</a>.</p>
+{% endif %}
+{% endblock %}

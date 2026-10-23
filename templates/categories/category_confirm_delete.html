@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ category.name }} | Book Management{% endblock %}
+{% block content %}
+<div class="card card-body">
+  <h1 class="h3">Delete category</h1>
+  <p>Are you sure you want to delete <strong>{{ category.name }}</strong>? Categories with books assigned cannot be deleted.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'categories:list' %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

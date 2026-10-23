@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} book | Book Management{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="h2 mb-3">{% if object %}Edit book{% else %}Add a book{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data" class="card card-body">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+        </div>
+      {% endfor %}
+      {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+      <div><button class="btn btn-primary" type="submit">Save book</button> <a class="btn btn-outline-secondary" href="{% url 'books:list' %}">Cancel</a></div>
+    </form>
+  </div>
+</div>
+{% endblock %}

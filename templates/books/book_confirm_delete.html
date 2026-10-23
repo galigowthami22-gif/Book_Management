@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ book.title }} | Book Management{% endblock %}
+{% block content %}
+<div class="card card-body">
+  <h1 class="h3">Delete book</h1>
+  <p>Are you sure you want to delete <strong>{{ book.title }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <a class="btn btn-outline-secondary" href="{{ book.get_absolute_url }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}
